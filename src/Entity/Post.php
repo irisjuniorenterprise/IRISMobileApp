@@ -40,6 +40,9 @@ class Post
     #[ORM\ManyToMany(targetEntity: Department::class, inversedBy: 'posts')]
     private $departments;
 
+    #[ORM\OneToOne(mappedBy: 'post', targetEntity: Poll::class, cascade: ['persist', 'remove'])]
+    private $poll;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -183,6 +186,23 @@ class Post
     public function removeDepartment(Department $department): self
     {
         $this->departments->removeElement($department);
+
+        return $this;
+    }
+
+    public function getPoll(): ?Poll
+    {
+        return $this->poll;
+    }
+
+    public function setPoll(Poll $poll): self
+    {
+        // set the owning side of the relation if necessary
+        if ($poll->getPost() !== $this) {
+            $poll->setPost($this);
+        }
+
+        $this->poll = $poll;
 
         return $this;
     }
