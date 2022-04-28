@@ -82,6 +82,15 @@ class Eagle implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'eagle', targetEntity: Response::class)]
     private $responses;
 
+    #[ORM\OneToMany(mappedBy: 'eagle', targetEntity: Polling::class)]
+    private $pollings;
+
+    #[ORM\OneToMany(mappedBy: 'eagle', targetEntity: Blame::class)]
+    private $blames;
+
+    #[ORM\OneToMany(mappedBy: 'eagle', targetEntity: History::class)]
+    private $histories;
+
 
     public function __construct()
     {
@@ -94,6 +103,9 @@ class Eagle implements UserInterface, PasswordAuthenticatedUserInterface
         $this->attendanceDisapprovals = new ArrayCollection();
         $this->workPosts = new ArrayCollection();
         $this->responses = new ArrayCollection();
+        $this->pollings = new ArrayCollection();
+        $this->blames = new ArrayCollection();
+        $this->histories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -537,6 +549,96 @@ class Eagle implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($response->getEagle() === $this) {
                 $response->setEagle(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Polling>
+     */
+    public function getPollings(): Collection
+    {
+        return $this->pollings;
+    }
+
+    public function addPolling(Polling $polling): self
+    {
+        if (!$this->pollings->contains($polling)) {
+            $this->pollings[] = $polling;
+            $polling->setEagle($this);
+        }
+
+        return $this;
+    }
+
+    public function removePolling(Polling $polling): self
+    {
+        if ($this->pollings->removeElement($polling)) {
+            // set the owning side to null (unless already changed)
+            if ($polling->getEagle() === $this) {
+                $polling->setEagle(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Blame>
+     */
+    public function getBlames(): Collection
+    {
+        return $this->blames;
+    }
+
+    public function addBlame(Blame $blame): self
+    {
+        if (!$this->blames->contains($blame)) {
+            $this->blames[] = $blame;
+            $blame->setEagle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlame(Blame $blame): self
+    {
+        if ($this->blames->removeElement($blame)) {
+            // set the owning side to null (unless already changed)
+            if ($blame->getEagle() === $this) {
+                $blame->setEagle(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, History>
+     */
+    public function getHistories(): Collection
+    {
+        return $this->histories;
+    }
+
+    public function addHistory(History $history): self
+    {
+        if (!$this->histories->contains($history)) {
+            $this->histories[] = $history;
+            $history->setEagle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHistory(History $history): self
+    {
+        if ($this->histories->removeElement($history)) {
+            // set the owning side to null (unless already changed)
+            if ($history->getEagle() === $this) {
+                $history->setEagle(null);
             }
         }
 
