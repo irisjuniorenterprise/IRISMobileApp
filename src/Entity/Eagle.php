@@ -91,6 +91,12 @@ class Eagle implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'eagle', targetEntity: History::class)]
     private $histories;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $linkedin;
+
+    #[ORM\OneToMany(mappedBy: 'eagle', targetEntity: Article::class)]
+    private $articles;
+
 
     public function __construct()
     {
@@ -106,6 +112,7 @@ class Eagle implements UserInterface, PasswordAuthenticatedUserInterface
         $this->pollings = new ArrayCollection();
         $this->blames = new ArrayCollection();
         $this->histories = new ArrayCollection();
+        $this->articles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -639,6 +646,48 @@ class Eagle implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($history->getEagle() === $this) {
                 $history->setEagle(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getLinkedin(): ?string
+    {
+        return $this->linkedin;
+    }
+
+    public function setLinkedin(?string $linkedin): self
+    {
+        $this->linkedin = $linkedin;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Article>
+     */
+    public function getArticles(): Collection
+    {
+        return $this->articles;
+    }
+
+    public function addArticle(Article $article): self
+    {
+        if (!$this->articles->contains($article)) {
+            $this->articles[] = $article;
+            $article->setEagle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArticle(Article $article): self
+    {
+        if ($this->articles->removeElement($article)) {
+            // set the owning side to null (unless already changed)
+            if ($article->getEagle() === $this) {
+                $article->setEagle(null);
             }
         }
 
