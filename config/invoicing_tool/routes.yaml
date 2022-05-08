@@ -1,0 +1,7 @@
+controllers:
+    resource: ../../src/Controller/invoicing_tool/
+    type: annotation
+
+kernel:
+    resource: ../../src/Kernel.php
+    type: annotation
