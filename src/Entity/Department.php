@@ -24,10 +24,14 @@ class Department
     #[ORM\ManyToMany(targetEntity: Post::class, mappedBy: 'departments')]
     private $posts;
 
+    #[ORM\OneToMany(mappedBy: 'department', targetEntity: Service::class)]
+    private $services;
+
     public function __construct()
     {
         $this->eagles = new ArrayCollection();
         $this->posts = new ArrayCollection();
+        $this->services = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -99,6 +103,36 @@ class Department
     {
         if ($this->posts->removeElement($post)) {
             $post->removeDepartment($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Service>
+     */
+    public function getServices(): Collection
+    {
+        return $this->services;
+    }
+
+    public function addService(Service $service): self
+    {
+        if (!$this->services->contains($service)) {
+            $this->services[] = $service;
+            $service->setDepartment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeService(Service $service): self
+    {
+        if ($this->services->removeElement($service)) {
+            // set the owning side to null (unless already changed)
+            if ($service->getDepartment() === $this) {
+                $service->setDepartment(null);
+            }
         }
 
         return $this;
