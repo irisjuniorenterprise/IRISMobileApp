@@ -16,7 +16,7 @@ class Polling
     #[ORM\Column(type: 'datetime')]
     private $date;
 
-    #[ORM\ManyToOne(targetEntity: Eagle::class, inversedBy: 'pollings')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'pollings')]
     #[ORM\JoinColumn(nullable: false)]
     private $eagle;
 
@@ -45,12 +45,12 @@ class Polling
         return $this;
     }
 
-    public function getEagle(): ?Eagle
+    public function getEagle(): ?User
     {
         return $this->eagle;
     }
 
-    public function setEagle(?Eagle $eagle): self
+    public function setEagle(?User $eagle): self
     {
         $this->eagle = $eagle;
 

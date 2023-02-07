@@ -2,26 +2,33 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\EngagementPostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EngagementPostRepository::class)]
+#[ApiResource]
 class EngagementPost
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['post:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['post:read'])]
     private $place;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['post:read'])]
     private $date;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['post:read'])]
     private $link;
 
     #[ORM\Column(type: 'datetime')]
@@ -35,6 +42,7 @@ class EngagementPost
 
     #[ORM\OneToOne(inversedBy: 'engagementPost', targetEntity: Post::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['library:read'])]
     private $post;
 
     #[ORM\OneToMany(mappedBy: 'engagementPost', targetEntity: Attendance::class)]
@@ -47,9 +55,11 @@ class EngagementPost
     private $attendanceDisapprovals;
 
     #[ORM\OneToOne(mappedBy: 'engagementPost', targetEntity: WorkPost::class, cascade: ['persist', 'remove'])]
+    #[Groups(['post:read'])]
     private $workPost;
 
     #[ORM\OneToOne(mappedBy: 'engagementPost', targetEntity: Training::class, cascade: ['persist', 'remove'])]
+    #[Groups(['post:read'])]
     private $training;
 
     public function __construct()

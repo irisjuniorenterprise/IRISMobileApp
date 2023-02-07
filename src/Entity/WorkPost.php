@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\WorkPostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: WorkPostRepository::class)]
+#[ApiResource]
 class WorkPost
 {
     #[ORM\Id]
@@ -17,9 +20,10 @@ class WorkPost
 
     #[ORM\OneToOne(inversedBy: 'workPost', targetEntity: EngagementPost::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['library:read'])]
     private $engagementPost;
 
-    #[ORM\ManyToOne(targetEntity: Eagle::class, inversedBy: 'workPosts')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'workPosts')]
     #[ORM\JoinColumn(nullable: false)]
     private $sg;
 
@@ -27,9 +31,11 @@ class WorkPost
     private $agendas;
 
     #[ORM\OneToOne(mappedBy: 'workPost', targetEntity: Meeting::class, cascade: ['persist', 'remove'])]
+    #[Groups(['post:read'])]
     private $meeting;
 
     #[ORM\OneToOne(mappedBy: 'workPost', targetEntity: Workshop::class, cascade: ['persist', 'remove'])]
+    #[Groups(['post:read'])]
     private $workshop;
 
     public function __construct()
@@ -54,12 +60,12 @@ class WorkPost
         return $this;
     }
 
-    public function getSg(): ?Eagle
+    public function getSg(): ?User
     {
         return $this->sg;
     }
 
-    public function setSg(?Eagle $sg): self
+    public function setSg(?User $sg): self
     {
         $this->sg = $sg;
 

@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BlameRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BlameRepository::class)]
+#[ApiResource]
 class Blame
 {
     #[ORM\Id]
@@ -14,12 +17,14 @@ class Blame
     private $id;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['blame:read'])]
     private $date;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['blame:read'])]
     private $reason;
 
-    #[ORM\ManyToOne(targetEntity: Eagle::class, inversedBy: 'blames')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'blames')]
     #[ORM\JoinColumn(nullable: false)]
     private $eagle;
 
@@ -52,12 +57,12 @@ class Blame
         return $this;
     }
 
-    public function getEagle(): ?Eagle
+    public function getEagle(): ?User
     {
         return $this->eagle;
     }
 
-    public function setEagle(?Eagle $eagle): self
+    public function setEagle(?User $eagle): self
     {
         $this->eagle = $eagle;
 

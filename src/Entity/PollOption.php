@@ -2,20 +2,25 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PollOptionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PollOptionRepository::class)]
+#[ApiResource]
 class PollOption
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['post:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['post:read'])]
     private $value;
 
     #[ORM\ManyToOne(targetEntity: Poll::class, inversedBy: 'pollOptions')]

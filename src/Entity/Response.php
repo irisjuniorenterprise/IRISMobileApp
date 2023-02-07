@@ -20,7 +20,7 @@ class Response
     #[ORM\JoinColumn(nullable: false)]
     private $field;
 
-    #[ORM\ManyToOne(targetEntity: Eagle::class, inversedBy: 'responses')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'responses')]
     #[ORM\JoinColumn(nullable: false)]
     private $eagle;
 
@@ -53,12 +53,12 @@ class Response
         return $this;
     }
 
-    public function getEagle(): ?Eagle
+    public function getEagle(): ?User
     {
         return $this->eagle;
     }
 
-    public function setEagle(?Eagle $eagle): self
+    public function setEagle(?User $eagle): self
     {
         $this->eagle = $eagle;
 

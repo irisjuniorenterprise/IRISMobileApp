@@ -2,20 +2,25 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PollRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PollRepository::class)]
+#[ApiResource]
 class Poll
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['post:read'])]
     private $id;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['post:read'])]
     private $end;
 
     #[ORM\OneToOne(inversedBy: 'poll', targetEntity: Post::class, cascade: ['persist', 'remove'])]
@@ -23,6 +28,7 @@ class Poll
     private $post;
 
     #[ORM\OneToMany(mappedBy: 'poll', targetEntity: PollOption::class)]
+    #[Groups(['post:read'])]
     private $pollOptions;
 
     #[ORM\OneToMany(mappedBy: 'poll', targetEntity: Polling::class)]

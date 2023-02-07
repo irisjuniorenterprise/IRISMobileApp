@@ -2,45 +2,56 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
+#[ApiResource]
 class Post
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['post:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['library:read', 'post:read'])]
     private $name;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['post:read'])]
     private $publishDate;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['post:read'])]
     private $targets;
 
-    #[ORM\ManyToOne(targetEntity: Eagle::class, inversedBy: 'posts')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private $author;
 
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class)]
+    #[Groups(['comments:read'])]
     private $comments;
 
     #[ORM\OneToOne(mappedBy: 'post', targetEntity: EngagementPost::class, cascade: ['persist', 'remove'])]
+    #[Groups(['post:read'])]
     private $engagementPost;
 
     #[ORM\OneToOne(mappedBy: 'post', targetEntity: Announcement::class, cascade: ['persist', 'remove'])]
+    #[Groups(['post:read'])]
     private $announcement;
 
     #[ORM\ManyToMany(targetEntity: Department::class, inversedBy: 'posts')]
     private $departments;
 
     #[ORM\OneToOne(mappedBy: 'post', targetEntity: Poll::class, cascade: ['persist', 'remove'])]
+    #[Groups(['post:read'])]
     private $poll;
 
     public function __construct()
@@ -90,12 +101,12 @@ class Post
         return $this;
     }
 
-    public function getAuthor(): ?Eagle
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    public function setAuthor(?Eagle $author): self
+    public function setAuthor(?User $author): self
     {
         $this->author = $author;
 

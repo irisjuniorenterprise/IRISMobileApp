@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AnnouncementRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AnnouncementRepository::class)]
+#[ApiResource]
 class Announcement
 {
     #[ORM\Id]
@@ -14,9 +17,11 @@ class Announcement
     private $id;
 
     #[ORM\Column(type: 'text')]
+    #[Groups(['post:read'])]
     private $content;
 
     #[ORM\Column(type: 'array', nullable: true)]
+    #[Groups(['post:read'])]
     private $imgs = [];
 
     #[ORM\Column(type: 'array', nullable: true)]

@@ -22,7 +22,7 @@ class StudyField
     #[ORM\JoinColumn(nullable: false)]
     private $university;
 
-    #[ORM\OneToMany(mappedBy: 'studyField', targetEntity: Eagle::class)]
+    #[ORM\OneToMany(mappedBy: 'studyField', targetEntity: User::class)]
     private $eagles;
 
     public function __construct()
@@ -60,14 +60,14 @@ class StudyField
     }
 
     /**
-     * @return Collection<int, Eagle>
+     * @return Collection<int, User>
      */
     public function getEagles(): Collection
     {
         return $this->eagles;
     }
 
-    public function addEagle(Eagle $eagle): self
+    public function addEagle(User $eagle): self
     {
         if (!$this->eagles->contains($eagle)) {
             $this->eagles[] = $eagle;
@@ -77,7 +77,7 @@ class StudyField
         return $this;
     }
 
-    public function removeEagle(Eagle $eagle): self
+    public function removeEagle(User $eagle): self
     {
         if ($this->eagles->removeElement($eagle)) {
             // set the owning side to null (unless already changed)

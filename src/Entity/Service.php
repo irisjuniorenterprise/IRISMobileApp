@@ -19,10 +19,10 @@ class Service
     private ?string $name;
 
     #[ORM\ManyToMany(targetEntity: PriceProposal::class, mappedBy: 'service')]
-    private ArrayCollection $priceProposals;
+    private Collection $priceProposals;
 
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: ServiceFeature::class)]
-    private ArrayCollection $serviceFeature;
+    private Collection $serviceFeature;
 
     #[ORM\ManyToOne(targetEntity: Department::class, inversedBy: 'services')]
     #[ORM\JoinColumn(nullable: false)]

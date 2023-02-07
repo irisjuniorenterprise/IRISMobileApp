@@ -6,6 +6,7 @@ use App\Repository\DepartmentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DepartmentRepository::class)]
 class Department
@@ -16,9 +17,10 @@ class Department
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['list:read'])]
     private $name;
 
-    #[ORM\OneToMany(mappedBy: 'department', targetEntity: Eagle::class)]
+    #[ORM\OneToMany(mappedBy: 'department', targetEntity: User::class)]
     private $eagles;
 
     #[ORM\ManyToMany(targetEntity: Post::class, mappedBy: 'departments')]
@@ -27,11 +29,15 @@ class Department
     #[ORM\OneToMany(mappedBy: 'department', targetEntity: Service::class)]
     private $services;
 
+    #[ORM\OneToMany(mappedBy: 'department', targetEntity: Task::class)]
+    private Collection $tasks;
+
     public function __construct()
     {
         $this->eagles = new ArrayCollection();
         $this->posts = new ArrayCollection();
         $this->services = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -52,14 +58,14 @@ class Department
     }
 
     /**
-     * @return Collection<int, Eagle>
+     * @return Collection<int, User>
      */
     public function getEagles(): Collection
     {
         return $this->eagles;
     }
 
-    public function addEagle(Eagle $eagle): self
+    public function addEagle(User $eagle): self
     {
         if (!$this->eagles->contains($eagle)) {
             $this->eagles[] = $eagle;
@@ -69,7 +75,7 @@ class Department
         return $this;
     }
 
-    public function removeEagle(Eagle $eagle): self
+    public function removeEagle(User $eagle): self
     {
         if ($this->eagles->removeElement($eagle)) {
             // set the owning side to null (unless already changed)
@@ -132,6 +138,36 @@ class Department
             // set the owning side to null (unless already changed)
             if ($service->getDepartment() === $this) {
                 $service->setDepartment(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->setDepartment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): self
+    {
+        if ($this->tasks->removeElement($task)) {
+            // set the owning side to null (unless already changed)
+            if ($task->getDepartment() === $this) {
+                $task->setDepartment(null);
             }
         }
 

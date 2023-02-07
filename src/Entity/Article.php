@@ -25,7 +25,7 @@ class Article
     #[ORM\Column(type: 'text')]
     private $content;
 
-    #[ORM\ManyToOne(targetEntity: Eagle::class, inversedBy: 'articles')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'articles')]
     #[ORM\JoinColumn(nullable: false)]
     private $eagle;
 
@@ -86,12 +86,12 @@ class Article
         return $this;
     }
 
-    public function getEagle(): ?Eagle
+    public function getEagle(): ?User
     {
         return $this->eagle;
     }
 
-    public function setEagle(?Eagle $eagle): self
+    public function setEagle(?User $eagle): self
     {
         $this->eagle = $eagle;
 

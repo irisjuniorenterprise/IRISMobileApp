@@ -23,7 +23,7 @@ class Agenda
     #[ORM\JoinColumn(nullable: false)]
     private $workPost;
 
-    public function getId(): ?int
+    public  function getId(): ?int
     {
         return $this->id;
     }

@@ -22,7 +22,7 @@ class Request
     #[ORM\Column(type: 'text')]
     private $content;
 
-    #[ORM\ManyToOne(targetEntity: Eagle::class, inversedBy: 'requests')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'requests')]
     #[ORM\JoinColumn(nullable: false)]
     private $eagle;
 
@@ -67,12 +67,12 @@ class Request
         return $this;
     }
 
-    public function getEagle(): ?Eagle
+    public function getEagle(): ?User
     {
         return $this->eagle;
     }
 
-    public function setEagle(?Eagle $eagle): self
+    public function setEagle(?User $eagle): self
     {
         $this->eagle = $eagle;
 

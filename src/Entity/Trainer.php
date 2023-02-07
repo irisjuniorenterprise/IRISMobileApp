@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\TrainerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TrainerRepository::class)]
+#[ApiResource]
 class Trainer
 {
     #[ORM\Id]
@@ -16,9 +19,11 @@ class Trainer
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['post:read'])]
     private $fName;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['post:read'])]
     private $lName;
 
     #[ORM\ManyToMany(targetEntity: Training::class, inversedBy: 'trainers')]

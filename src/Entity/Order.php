@@ -2,34 +2,47 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\OrderRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
+#[ApiResource]
 class Order
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['order:read'])]
     private $id;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['order:read'])]
     private $qty;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['order:read'])]
     private $date;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['order:read'])]
     private $_option;
 
-    #[ORM\ManyToOne(targetEntity: Eagle::class, inversedBy: 'orders')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
     private $eagle;
 
     #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['order:read'])]
     private $product;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['order:read'])]
+    private ?string $status;
+
 
     public function getId(): ?int
     {
@@ -72,12 +85,12 @@ class Order
         return $this;
     }
 
-    public function getEagle(): ?Eagle
+    public function getEagle(): ?User
     {
         return $this->eagle;
     }
 
-    public function setEagle(?Eagle $eagle): self
+    public function setEagle(?User $eagle): self
     {
         $this->eagle = $eagle;
 
@@ -95,4 +108,17 @@ class Order
 
         return $this;
     }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+
 }

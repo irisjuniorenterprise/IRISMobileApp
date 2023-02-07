@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MeetingRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MeetingRepository::class)]
+#[ApiResource]
 class Meeting
 {
     #[ORM\Id]
@@ -14,6 +17,7 @@ class Meeting
     private $id;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['post:read'])]
     private $type;
 
     #[ORM\OneToOne(inversedBy: 'meeting', targetEntity: WorkPost::class, cascade: ['persist', 'remove'])]

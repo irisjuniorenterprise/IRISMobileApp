@@ -8,9 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EagleRepository::class)]
-class Eagle implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,6 +20,8 @@ class Eagle implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Assert\NotBlank(message: "Please enter your email")]
+    #[Groups(['task:read', 'list:read'])]
     private $email;
 
     #[ORM\Column(type: 'json')]
@@ -27,12 +31,15 @@ class Eagle implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['post:read', 'comments:read', 'list:read'])]
     private $fName;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['post:read', 'comments:read', 'list:read'])]
     private $lName;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['list:read'])]
     private $phone;
 
     #[ORM\Column(type: 'date')]
@@ -42,6 +49,7 @@ class Eagle implements UserInterface, PasswordAuthenticatedUserInterface
     private $adress;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['post:read', 'comments:read', 'list:read'])]
     private $img;
 
     #[ORM\ManyToOne(targetEntity: University::class, inversedBy: 'eagles')]
@@ -59,6 +67,7 @@ class Eagle implements UserInterface, PasswordAuthenticatedUserInterface
     private $orders;
 
     #[ORM\ManyToOne(targetEntity: Department::class, inversedBy: 'eagles')]
+    #[Groups(['list:read'])]
     private $department;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class)]
@@ -97,6 +106,15 @@ class Eagle implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'eagle', targetEntity: Article::class)]
     private $articles;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $tokenFcm = null;
+
+    #[ORM\OneToMany(mappedBy: 'eagle', targetEntity: Task::class)]
+    private Collection $tasks;
+
+    #[ORM\OneToMany(mappedBy: 'postedBy', targetEntity: BiblioIRIS::class)]
+    private Collection $biblioIRIS;
+
 
     public function __construct()
     {
@@ -113,6 +131,8 @@ class Eagle implements UserInterface, PasswordAuthenticatedUserInterface
         $this->blames = new ArrayCollection();
         $this->histories = new ArrayCollection();
         $this->articles = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
+        $this->biblioIRIS = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -688,6 +708,78 @@ class Eagle implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($article->getEagle() === $this) {
                 $article->setEagle(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getTokenFcm(): ?string
+    {
+        return $this->tokenFcm;
+    }
+
+    public function setTokenFcm(?string $tokenFcm): self
+    {
+        $this->tokenFcm = $tokenFcm;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->setEagle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): self
+    {
+        if ($this->tasks->removeElement($task)) {
+            // set the owning side to null (unless already changed)
+            if ($task->getEagle() === $this) {
+                $task->setEagle(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BiblioIRIS>
+     */
+    public function getBiblioIRIS(): Collection
+    {
+        return $this->biblioIRIS;
+    }
+
+    public function addBiblioIRI(BiblioIRIS $biblioIRI): self
+    {
+        if (!$this->biblioIRIS->contains($biblioIRI)) {
+            $this->biblioIRIS->add($biblioIRI);
+            $biblioIRI->setPostedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBiblioIRI(BiblioIRIS $biblioIRI): self
+    {
+        if ($this->biblioIRIS->removeElement($biblioIRI)) {
+            // set the owning side to null (unless already changed)
+            if ($biblioIRI->getPostedBy() === $this) {
+                $biblioIRI->setPostedBy(null);
             }
         }
 

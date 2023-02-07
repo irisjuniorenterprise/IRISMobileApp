@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\WorkshopRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: WorkshopRepository::class)]
+#[ApiResource]
 class Workshop
 {
     #[ORM\Id]
@@ -15,6 +18,7 @@ class Workshop
 
     #[ORM\OneToOne(inversedBy: 'workshop', targetEntity: WorkPost::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['library:read', 'post:read'])]
     private $workPost;
 
     #[ORM\OneToOne(mappedBy: 'workshop', targetEntity: BiblioIRIS::class, cascade: ['persist', 'remove'])]

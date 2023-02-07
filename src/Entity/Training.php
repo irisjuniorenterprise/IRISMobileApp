@@ -2,24 +2,30 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\TrainingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TrainingRepository::class)]
+#[ApiResource]
 class Training
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['post:read'])]
     private $id;
 
     #[ORM\OneToOne(inversedBy: 'training', targetEntity: EngagementPost::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['library:read'])]
     private $engagementPost;
 
     #[ORM\ManyToMany(targetEntity: Trainer::class, mappedBy: 'Trainings')]
+    #[Groups(['post:read'])]
     private $trainers;
 
     #[ORM\OneToOne(mappedBy: 'training', targetEntity: BiblioIRIS::class, cascade: ['persist', 'remove'])]

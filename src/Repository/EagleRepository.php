@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Eagle;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -12,25 +12,25 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
- * @extends ServiceEntityRepository<Eagle>
+ * @extends ServiceEntityRepository<User>
  *
- * @method Eagle|null find($id, $lockMode = null, $lockVersion = null)
- * @method Eagle|null findOneBy(array $criteria, array $orderBy = null)
- * @method Eagle[]    findAll()
- * @method Eagle[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method User|null find($id, $lockMode = null, $lockVersion = null)
+ * @method User|null findOneBy(array $criteria, array $orderBy = null)
+ * @method User[]    findAll()
+ * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class EagleRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Eagle::class);
+        parent::__construct($registry, User::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(Eagle $entity, bool $flush = true): void
+    public function add(User $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -42,7 +42,7 @@ class EagleRepository extends ServiceEntityRepository implements PasswordUpgrade
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Eagle $entity, bool $flush = true): void
+    public function remove(User $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -55,7 +55,7 @@ class EagleRepository extends ServiceEntityRepository implements PasswordUpgrade
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        if (!$user instanceof Eagle) {
+        if (!$user instanceof User) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
         }
 
@@ -65,7 +65,7 @@ class EagleRepository extends ServiceEntityRepository implements PasswordUpgrade
     }
 
     // /**
-    //  * @return Eagle[] Returns an array of Eagle objects
+    //  * @return User[] Returns an array of User objects
     //  */
     /*
     public function findByExampleField($value)
@@ -82,7 +82,7 @@ class EagleRepository extends ServiceEntityRepository implements PasswordUpgrade
     */
 
     /*
-    public function findOneBySomeField($value): ?Eagle
+    public function findOneBySomeField($value): ?User
     {
         return $this->createQueryBuilder('e')
             ->andWhere('e.exampleField = :val')

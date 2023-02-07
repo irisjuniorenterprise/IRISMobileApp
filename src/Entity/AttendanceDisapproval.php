@@ -22,7 +22,7 @@ class AttendanceDisapproval
     #[ORM\Column(type: 'array')]
     private $files = [];
 
-    #[ORM\ManyToOne(targetEntity: Eagle::class, inversedBy: 'attendanceDisapprovals')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'attendanceDisapprovals')]
     #[ORM\JoinColumn(nullable: false)]
     private $eagle;
 
@@ -71,12 +71,12 @@ class AttendanceDisapproval
         return $this;
     }
 
-    public function getEagle(): ?Eagle
+    public function getEagle(): ?User
     {
         return $this->eagle;
     }
 
-    public function setEagle(?Eagle $eagle): self
+    public function setEagle(?User $eagle): self
     {
         $this->eagle = $eagle;
 

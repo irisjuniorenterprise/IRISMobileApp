@@ -2,33 +2,42 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ApiResource]
 class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['product:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['product:read', 'order:read'])]
     private $name;
 
     #[ORM\Column(type: 'array')]
+    #[Groups(['product:read'])]
     private $imgs = [];
 
     #[ORM\Column(type: 'float')]
+    #[Groups(['product:read', 'order:read'])]
     private $price;
 
     #[ORM\Column(type: 'array', nullable: true)]
+    #[Groups(['product:read'])]
     private $options = [];
 
-    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'products')]
+    #[ORM\ManyToOne(targetEntity: Category::class, fetch: "EAGER", inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['product:read'])]
     private $category;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Order::class)]
@@ -80,7 +89,7 @@ class Product
         return $this;
     }
 
-    public function getOptions(): ?array
+    public function getOptions(): array|bool|null
     {
         return $this->options;
     }

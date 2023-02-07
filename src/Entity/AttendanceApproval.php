@@ -16,7 +16,7 @@ class AttendanceApproval
     #[ORM\Column(type: 'datetime')]
     private $date;
 
-    #[ORM\ManyToOne(targetEntity: Eagle::class, inversedBy: 'attendanceApprovals')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'attendanceApprovals')]
     #[ORM\JoinColumn(nullable: false)]
     private $eagle;
 
@@ -41,12 +41,12 @@ class AttendanceApproval
         return $this;
     }
 
-    public function getEagle(): ?Eagle
+    public function getEagle(): ?User
     {
         return $this->eagle;
     }
 
-    public function setEagle(?Eagle $eagle): self
+    public function setEagle(?User $eagle): self
     {
         $this->eagle = $eagle;
 

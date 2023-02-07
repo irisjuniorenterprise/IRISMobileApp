@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
+#[ApiResource]
 class Comment
 {
     #[ORM\Id]
@@ -17,10 +20,12 @@ class Comment
     private $date;
 
     #[ORM\Column(type: 'text')]
+    #[Groups(['comments:read'])]
     private $content;
 
-    #[ORM\ManyToOne(targetEntity: Eagle::class, inversedBy: 'comments')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['comments:read'])]
     private $eagle;
 
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]
@@ -56,12 +61,12 @@ class Comment
         return $this;
     }
 
-    public function getEagle(): ?Eagle
+    public function getEagle(): ?User
     {
         return $this->eagle;
     }
 
-    public function setEagle(?Eagle $eagle): self
+    public function setEagle(?User $eagle): self
     {
         $this->eagle = $eagle;
 

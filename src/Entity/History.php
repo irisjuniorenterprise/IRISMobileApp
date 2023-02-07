@@ -19,7 +19,7 @@ class History
     #[ORM\Column(type: 'datetime')]
     private $validUntil;
 
-    #[ORM\ManyToOne(targetEntity: Eagle::class, inversedBy: 'histories')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'histories')]
     #[ORM\JoinColumn(nullable: false)]
     private $eagle;
 
@@ -53,12 +53,12 @@ class History
         return $this;
     }
 
-    public function getEagle(): ?Eagle
+    public function getEagle(): ?User
     {
         return $this->eagle;
     }
 
-    public function setEagle(?Eagle $eagle): self
+    public function setEagle(?User $eagle): self
     {
         $this->eagle = $eagle;
 
